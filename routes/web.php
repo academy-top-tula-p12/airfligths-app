@@ -1,6 +1,11 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\AirlineController;
+use App\Http\Controllers\AirportController;
+use App\Http\Controllers\FlightController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,9 +23,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::prefix("dashboard")->group(function(){
+
+    Route::get("/", function(){
+        return view("dashboard");
+    })->name("dashboard");
+
+    Route::resource("cities", CityController::class);
+    Route::resource("airlines", AirlineController::class);
+    Route::resource("airports", AirportController::class);
+    Route::resource("flights", FlightController::class);
+
+})->middleware(['auth', 'verified']);
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
