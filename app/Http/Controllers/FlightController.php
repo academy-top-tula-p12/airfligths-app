@@ -2,40 +2,98 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+
+use App\Models\City;
+use App\Models\Airline;
+use App\Models\Airport;
+use App\Models\Flight;
 
 class FlightController extends Controller
 {
+
+    /**
+     * Display a home page.
+     */
+    public function home(): View
+    {
+        $flights = Flight::all();
+
+        return view("home", [
+            "flights" => $flights,
+        ]);
+    }
+
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
-        //
+        $flights = Flight::all();
+
+        return view("flights.index", [
+            "flights" => $flights,
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        $airlines = Airline::all();
+        $airports = Airport::all();
+
+        return view("flights.create", [
+            "airlines" => $airlines,
+            "airports" => $airports,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $title = $request->input("title");
+        $date = $request->input("date");
+        $time = $request->input("time");
+        $duration = $request->input("duration");
+
+        $flight = new Flight();
+        $flight->title = $title;
+        $flight->date = $date;
+        $flight->time = $time;
+        $flight->duration = $duration;
+
+        $airline = Airline::find($request->input("airline"));
+        $flight->airline()->associate($airline);
+
+        $departure = Airport::find($request->input("departure"));
+        $flight->departure()->associate($departure);
+
+        $arrival = Airport::find($request->input("arrival"));
+        $flight->arrival()->associate($arrival);
+
+        $flight->save();
+
+        return redirect()->route("flights.index");
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): View
     {
-        //
+        $flight = Flight::find($id);
+
+        return view("flights.show", [
+            "flight" => $flight,
+        ]);
     }
 
     /**
@@ -43,7 +101,15 @@ class FlightController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $flight = Flight::find($id);
+        $airlines = Airline::all();
+        $airports = Airport::all();
+
+        return view("flights.edit", [
+            "flight" => $flight,
+            "airlines" => $airlines,
+            "airports" => $airports,
+        ]);
     }
 
     /**
@@ -51,7 +117,29 @@ class FlightController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $title = $request->input("title");
+        $date = $request->input("date");
+        $time = $request->input("time");
+        $duration = $request->input("duration");
+
+        $flight =Flight::find($id);
+        $flight->title = $title;
+        $flight->date = $date;
+        $flight->time = $time;
+        $flight->duration = $duration;
+
+        $airline = Airline::find($request->input("airline"));
+        $flight->airline()->associate($airline);
+
+        $departure = Airport::find($request->input("departure"));
+        $flight->departure()->associate($departure);
+
+        $arrival = Airport::find($request->input("arrival"));
+        $flight->arrival()->associate($arrival);
+
+        $flight->save();
+
+        return redirect()->route("flights.index");
     }
 
     /**
@@ -59,6 +147,10 @@ class FlightController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $flight =Flight::find($id);
+
+        $flight->delete();
+
+        return redirect()->route("flights.index");
     }
 }

@@ -5,7 +5,7 @@
                 {{ __('Airlines List') }}
             </h2>
             <a href="{{ route("airlines.create") }}">
-                <x-primary-button>{{ __("Create New Airport") }}</x-primary-button>
+                <x-primary-button>{{ __("Create New Airline") }}</x-primary-button>
             </a>
         </div>
     </x-slot>

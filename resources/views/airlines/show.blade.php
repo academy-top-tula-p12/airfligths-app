@@ -19,11 +19,11 @@
                         <h1 class="text-xl">{{ $airline->title }}</h1>
                         <h3>{{ $city->title}}</h3>
                     </div>
-                    <div>
+                    <div class="mb-5">
                         <h2 class="text-2xl">Airports:</h2>
                         @if(isset($airports))
                             @foreach($airports as $airport)
-                                <h3>{{ $airport }}</h3>
+                                <h3>{{ $airport->title }}</h3>
                             @endforeach
                         @endif
                     </div>

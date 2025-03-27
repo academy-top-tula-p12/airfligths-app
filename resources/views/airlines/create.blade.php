@@ -33,13 +33,13 @@
                     </select>
                     <br>
 
-                    {{-- <x-input-label>{{ __("Airports") }}</x-input-label>
-                    <select id="airports" name="airports" multiple>
+                    <x-input-label>{{ __("Airports") }}</x-input-label>
+                    <select id="airports" name="airports[]" multiple>
                         @foreach($airports as $airport)
                         <option value="{{ $airport->id }}">{{ $airport->title }}</option>
                         @endforeach
                     </select>
-                    <br> --}}
+                    <br>
 
                     <x-primary-button>{{ __("Save") }}</x-primary-button>
                 </form>

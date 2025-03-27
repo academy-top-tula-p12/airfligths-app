@@ -11,18 +11,30 @@ use App\Models\City;
 use App\Models\Airline;
 use App\Models\Airport;
 
+use App\Helpers\Contracts\AirportsContract;
+
+
 class AirportController extends Controller
 {
+    private $airportService;
+    public function __construct(AirportsContract $airportService)
+    {
+        $this->airportService = $airportService;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index()
     {
-        $airports = Airline::all();
+        //$airports = Airport::all();
+        $airports = $airportService->LoadAll();
 
         return view("airports.index", [
             "airports" => $airports
         ]);
+
+        //return $airports;
     }
 
     /**
@@ -45,7 +57,10 @@ class AirportController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $title = $request->input("title");
-        $image = $request->file("image")->store("images", "public");
+        $image = null;
+        if($request->file("image")){
+            $image = $request->file("image")->store("images", "public");
+        }
 
         $airport = new Airport();
 
@@ -60,7 +75,7 @@ class AirportController extends Controller
         $airlines = $request->input("airlines");
         if($airlines != null){
             foreach($airlines as $airline){
-                $airport->airports()->attach($airline);
+                $airport->airlines()->attach($airline);
             }
         }
 
@@ -73,8 +88,10 @@ class AirportController extends Controller
     public function show(string $id): View
     {
         $airport = Airport::find($id);
-        $city = City::find($airport->city_id);
-        $airlines = $airport->airlines();
+        $city = $airport->city;
+        $airlines = $airport->airlines;
+
+        $airport->airlines();
 
         return view("airports.show", [
             "airport" => $airport,
@@ -90,7 +107,7 @@ class AirportController extends Controller
     {
         $airport = Airport::find($id);
         $cities = City::all();
-        $airlines = Airlines::all();
+        $airlines = Airline::all();
 
         return view("airports.edit", [
             "airport" => $airport,
@@ -124,7 +141,7 @@ class AirportController extends Controller
         $airlines = $request->input("airlines");
         if($airlines != null){
             foreach($airlines as $airline){
-                $airport->airports()->attach($airline);
+                $airport->airlines()->attach($airline);
             }
         }
 

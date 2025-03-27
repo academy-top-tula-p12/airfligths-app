@@ -21,10 +21,10 @@ class Airport extends Model
     }
 
     public function airlines(): BelongsToMany{
-        return $this->belongsToManu(Airline::class);
+        return $this->belongsToMany(Airline::class, "airport_airline");
     }
 
     public function flights(): BelongsToMany{
-        return $this->belongsToManu(Flight::class);
+        return $this->belongsToMany(Flight::class);
     }
 }

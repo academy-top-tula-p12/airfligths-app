@@ -31,11 +31,11 @@ class AirlineController extends Controller
     public function create(): View
     {
         $cities = City::all();
-        //$airports = Airport::all();
+        $airports = Airport::all();
 
         return view("airlines.create", [
-            "cities" => $cities
-            //"airports" => $airports
+            "cities" => $cities,
+            "airports" => $airports,
         ]);
     }
 
@@ -57,12 +57,12 @@ class AirlineController extends Controller
 
         $airline->save();
 
-        // $airports = $request->input("airports");
-        // if($airports != null){
-        //     foreach($airports as $airport){
-        //         $airline->airports()->attach($airport);
-        //     }
-        // }
+        $airports = $request->input("airports");
+        if($airports != null){
+            foreach($airports as $airport){
+                $airline->airports()->attach($airport);
+            }
+        }
 
         return redirect()->route("airlines.index");
     }
@@ -72,7 +72,16 @@ class AirlineController extends Controller
      */
     public function show(string $id): View
     {
+        $airline = Airline::find($id);
+        $city = $airline->city;
 
+        $airports = $airline->airports;
+
+        return view("airlines.show", [
+            "airline" => $airline,
+            "city" => $city,
+            "airports" => $airports
+        ]);
 
     }
 
@@ -83,12 +92,12 @@ class AirlineController extends Controller
     {
         $airline = Airline::find($id);
         $cities = City::all();
-        //$airports = Airport::all();
+        $airports = Airport::all();
 
         return view("airlines.edit", [
             "airline" => $airline,
-            "cities" => $cities
-            //"airports" => $airports
+            "cities" => $cities,
+            "airports" => $airports,
         ]);
     }
 
@@ -112,14 +121,14 @@ class AirlineController extends Controller
 
         $airline->save();
 
-        // $airline->airports()->detach();
+        $airline->airports()->detach();
 
-        // $airports = $request->input("airports");
-        // if($airports != null){
-        //     foreach($airports as $airport){
-        //         $airline->airports()->attach($airport);
-        //     }
-        // }
+        $airports = $request->input("airports");
+        if($airports != null){
+            foreach($airports as $airport){
+                $airline->airports()->attach($airport);
+            }
+        }
 
         return redirect()->route("airlines.index");
     }
