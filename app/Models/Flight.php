@@ -15,7 +15,10 @@ class Flight extends Model
         "title",
         "date",
         "time",
-        "duration"
+        "duration",
+        "activity",
+        "passangers_count",
+        "price",
     ];
 
     public function airline(): BelongsTo{

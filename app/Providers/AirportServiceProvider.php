@@ -20,8 +20,6 @@ class AirportServiceProvider extends ServiceProvider
         $this->app->singleton(AirportsContract::class, function($app){
             return new AirportsMySql();
         });
-
-
     }
 
     /**

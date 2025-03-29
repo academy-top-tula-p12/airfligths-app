@@ -11,6 +11,12 @@ class AirportsMySql implements AirportsContract
     {
         return Airport::all();
     }
+
+    public function LoadAllActivity()
+    {
+        return Airport::where("activity", true)->get();
+    }
+
     public function LoadById($id)
     {
         return Airport::find($id);

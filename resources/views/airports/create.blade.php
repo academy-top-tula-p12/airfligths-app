@@ -41,6 +41,14 @@
                     </select>
                     <br>
 
+                    <x-input-label>{{ __("International") }}</x-input-label>
+                    <input type="checkbox" name="international" id="international" />
+                    <br>
+
+                    <x-input-label>{{ __("Activity") }}</x-input-label>
+                    <input type="checkbox" name="activity" id="activity" checked />
+                    <br>
+
                     <x-primary-button>{{ __("Save") }}</x-primary-button>
                 </form>
             </div>

@@ -28,7 +28,7 @@ class AirportController extends Controller
     public function index()
     {
         //$airports = Airport::all();
-        $airports = $airportService->LoadAll();
+        $airports = $this->airportService->LoadAll();
 
         return view("airports.index", [
             "airports" => $airports
@@ -66,6 +66,10 @@ class AirportController extends Controller
 
         $airport->title = $title;
         $airport->image = $image;
+
+
+        $airport->activity = $request->input("activity") == "on";
+        $airport->international = $request->input("international") == "on";
 
         $city = City::find($request->input("city"));
         $airport->city()->associate($city);
@@ -130,6 +134,9 @@ class AirportController extends Controller
             $image = $request->file("image")->store("images", "public");
             $airport->image = $image;
         }
+
+        $airport->activity = $request->input("activity") == "on";
+        $airport->international = $request->input("international") == "on";
 
         $city = City::find($request->input("city"));
         $airport->city()->associate($city);

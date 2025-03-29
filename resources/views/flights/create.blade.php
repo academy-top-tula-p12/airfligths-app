@@ -53,8 +53,26 @@
                     </select>
                     <br>
 
+                    <x-input-label>{{ __("Passangers Count") }}</x-input-label>
+                    <x-text-input id="passangers_count"
+                                    name="passangers_count"
+                                    type="number" class="mt-2 mb-4 w-full" required />
+                    <br>
+
+                    <x-input-label>{{ __("Price") }}</x-input-label>
+                    <x-text-input id="price"
+                                    name="price"
+                                    type="number"
+                                    step="0.01"
+                                    class="mt-2 mb-4 w-full" required />
+                    <br>
+
                     <x-input-label>{{ __("Duration") }}</x-input-label>
                     <x-text-input id="duration" name="duration" type="number" class="mt-2 mb-4 w-full" required />
+                    <br>
+
+                    <x-input-label>{{ __("Activity") }}</x-input-label>
+                    <input type="checkbox" name="activity" id="activity" checked />
                     <br>
 
                     <x-primary-button>{{ __("Save") }}</x-primary-button>

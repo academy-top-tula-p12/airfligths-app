@@ -13,7 +13,9 @@ class Airport extends Model
 
     protected $fillable = [
         "title",
-        "image"
+        "image",
+        "activity",
+        "intenational"
     ];
 
     public function city(): BelongsTo{

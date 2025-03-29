@@ -57,7 +57,8 @@ class FlightController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+
+     public function store(Request $request): RedirectResponse
     {
         $title = $request->input("title");
         $date = $request->input("date");
@@ -69,6 +70,11 @@ class FlightController extends Controller
         $flight->date = $date;
         $flight->time = $time;
         $flight->duration = $duration;
+
+        $flight->passangers_count = $request->input("passangers_count");
+        $flight->price = $request->input("price");
+
+        $flight->activity = $request->input("activity") == "on";
 
         $airline = Airline::find($request->input("airline"));
         $flight->airline()->associate($airline);
@@ -127,6 +133,11 @@ class FlightController extends Controller
         $flight->date = $date;
         $flight->time = $time;
         $flight->duration = $duration;
+
+        $flight->passangers_count = $request->input("passangers_count");
+        $flight->price = $request->input("price");
+
+        $flight->activity = $request->input("activity") == "on";
 
         $airline = Airline::find($request->input("airline"));
         $flight->airline()->associate($airline);
