@@ -19,7 +19,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [FlightController::class, "home"])->name("home");
+Route::any('/', [FlightController::class, "home"])->name("home");
+
+
 
 Route::prefix("dashboard")->group(function(){
 

@@ -14,16 +14,55 @@ use App\Models\Flight;
 
 class FlightController extends Controller
 {
+    // private $sortDateAsc = false;
+    // private $sortPriceAsc = true;
 
     /**
      * Display a home page.
      */
     public function home(): View
     {
-        $flights = Flight::all();
+        $sortField = request()->query("sortField");
+        $sortDateAsc = request()->query("sortDateAsc");
+        $sortTimeAsc = request()->query("sortTimeAsc");
+
+        if(request()->input("search") != null)
+            $search = request()->input("search");
+        else
+            $search = "";
+
+        $flights = Flight::join('airports', 'flights.departure_id', '=', 'airports.id')
+            ->where([
+                ["flights.activity", "=", "1"],
+                ["airports.title", "like", "%{$search}%"]
+            ])->get();
+
+        switch($sortField)
+        {
+            case "sortDateAsc":
+                if($sortDateAsc)
+                    //$flights = Flight::where("activity", "1")->orderBy("Date", "asc")->get();
+                    $flights = collect($flights)->sortBy("Date");
+                else
+                    //$flights = Flight::where("activity", "1")->orderBy("Date", "desc")->get();
+                    $flights = collect($flights)->sortByDesc("Date");
+                $sortDateAsc = !$sortDateAsc;
+                break;
+            case "sortTimeAsc":
+                if($sortTimeAsc)
+                    $flights = Flight::where("activity", "1")->orderBy("Time", "asc")->get();
+                else
+                    $flights = Flight::where("activity", "1")->orderBy("Time", "desc")->get();
+                $sortTimeAsc = !$sortTimeAsc;
+                break;
+        }
+
 
         return view("home", [
+            "search" => $search,
             "flights" => $flights,
+            "sortDateAsc" => $sortDateAsc,
+            "sortTimeAsc" => $sortTimeAsc,
         ]);
     }
 
@@ -39,6 +78,41 @@ class FlightController extends Controller
             "flights" => $flights,
         ]);
     }
+
+    // public function sortDate()
+    // {
+    //     if(request()->query("sortDateAsc") == "1")
+    //         $flights = Flight::where("activity", "1")->orderBy("Date", "asc")->get();
+    //     else
+    //         $flights = Flight::where("activity", "1")->orderBy("Date", "desc")->get();
+
+    //     return view("home", [
+    //         "flights" => $flights,
+    //         "sortDateAsc" => !request()->query("sortDateAsc"),
+    //     ]);
+
+    //     //return $flights;
+
+    //     //$this->home($flights);
+    // }
+
+    // public function sortPrice()
+    // {
+    //     if($this->sortPriceAsc)
+    //         $flights = Flight::get()->sortBy("Price");
+    //     else
+    //         $flights = Flight::get()->sortByDesc("Price");
+
+    //     $this->sortPriceAsc = !$this->sortPriceAsc;
+
+    //     // return view("home", [
+    //     //     "flights" => $flights,
+    //     // ]);
+
+    //     return $flights;
+
+    //     //$this->home($flights);
+    // }
 
     /**
      * Show the form for creating a new resource.

@@ -46,7 +46,15 @@
                 <div class="py-12">
                     <div class="max-w-7xl m-6" style="margin: 12px 0;">
                         <div class="bg-white dark:bg-gray-800 px-6 overflow-hidden shadow-sm rounded-lg flex justify-between items-center" style="padding: 24px 12px;">
-                            asdasdassd
+                            <form action="{{ route("home"), [
+                                                    "sortField" => "",
+                                                    "sortDateAsc" => $sortDateAsc,
+                                                    "sortTimeAsc" => $sortTimeAsc] }}" method="POST">
+                                {{ csrf_field() }}
+                                <x-text-input value="{{ $search }}" id="search" name="search" type="text" class="mt-2 mb-4 w-full" placeholder="Search text"
+                                 />
+                                <x-primary-button>{{ __("Search") }}</x-primary-button>
+                            </form>
                         </div>
                     </div>
 
@@ -58,8 +66,15 @@
                                         <th>Title</th>
                                         <th>Departure</th>
                                         <th>Arrival</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
+                                        <th><a href="{{ route("home", [
+                                                    "sortField" => "sortDateAsc",
+                                                    "sortDateAsc" => $sortDateAsc,
+                                                    "sortTimeAsc" => $sortTimeAsc]) }}">Date</a></th>
+                                        <th><a href="{{ route("home", [
+                                                    "sortField" => "sortTimeAsc",
+                                                    "sortDateAsc" => $sortDateAsc,
+                                                    "sortTimeAsc" => $sortTimeAsc]) }}">Time</a></th>
+                                        {{-- <th><a href="{{ route("sortPrice") }}">Price</a></th> --}}
                                         <th>Duration</th>
                                     </tr>
                                 </thead>
@@ -71,6 +86,7 @@
                                         <td>{{ $flight->arrival->title }}</td>
                                         <td>{{ $flight->date }}</td>
                                         <td>{{ $flight->time }}</td>
+                                        {{-- <td>{{ $flight->price }}</td> --}}
                                         <td>{{ $flight->duration }}</td>
                                     </tr>
                                     @endforeach
