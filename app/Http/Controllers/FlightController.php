@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 
+use Illuminate\Pagination\Paginator;
+
 use App\Models\City;
 use App\Models\Airline;
 use App\Models\Airport;
@@ -25,6 +27,7 @@ class FlightController extends Controller
         $sortField = request()->query("sortField");
         $sortDateAsc = request()->query("sortDateAsc");
         $sortTimeAsc = request()->query("sortTimeAsc");
+        $page = request()->query("page") ? request()->query("page") : 1;
 
         if(request()->input("search") != null)
             $search = request()->input("search");
@@ -35,24 +38,32 @@ class FlightController extends Controller
             ->where([
                 ["flights.activity", "=", "1"],
                 ["airports.title", "like", "%{$search}%"]
-            ])->get();
+            ])
+            ->select("flights.*", "airports.title as departure")
+            ->paginate(3);
 
         switch($sortField)
         {
             case "sortDateAsc":
                 if($sortDateAsc)
-                    //$flights = Flight::where("activity", "1")->orderBy("Date", "asc")->get();
-                    $flights = collect($flights)->sortBy("Date");
+                    $flights = $flights->sortBy(function($flight){
+                        return $flight->date;
+                    });
                 else
-                    //$flights = Flight::where("activity", "1")->orderBy("Date", "desc")->get();
-                    $flights = collect($flights)->sortByDesc("Date");
+                    $flights = $flights->sortByDesc(function($flight){
+                        return $flight->date;
+                    });
                 $sortDateAsc = !$sortDateAsc;
                 break;
             case "sortTimeAsc":
                 if($sortTimeAsc)
-                    $flights = Flight::where("activity", "1")->orderBy("Time", "asc")->get();
+                    $flights = $flights->sortBy(function($flight){
+                        return $flight->time;
+                    });
                 else
-                    $flights = Flight::where("activity", "1")->orderBy("Time", "desc")->get();
+                    $flights = $flights->sortByDesc(function($flight){
+                        return $flight->time;
+                    });
                 $sortTimeAsc = !$sortTimeAsc;
                 break;
         }
@@ -63,6 +74,7 @@ class FlightController extends Controller
             "flights" => $flights,
             "sortDateAsc" => $sortDateAsc,
             "sortTimeAsc" => $sortTimeAsc,
+            "page" => $page
         ]);
     }
 
